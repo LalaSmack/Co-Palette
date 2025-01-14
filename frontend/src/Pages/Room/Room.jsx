@@ -6,8 +6,10 @@ const Room = () => {
     let { room } = useParams();
   return (
     <>
-    <h2>This is a {room} </h2>
-    <Canvas />
+    <h2>Room: {room} </h2>
+    <div className="drawing-area">
+      <Canvas />
+    </div>
     </>
     )
 };
