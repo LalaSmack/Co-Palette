@@ -18,6 +18,12 @@ const Canvas = () => {
       contextRef.current.closePath();
     };
 
+    const clearCanvas = (event) => {
+      if (event.key === "Delete") {
+        console.log("clearing canvas");
+        contextRef.current.clearRect(0, 0, window.innerHeight * 1, window.innerHeight * 0.75);
+      }
+    };
     const drawing = ({ nativeEvent }) => {
       if (!isDrawing) {
         return;
@@ -40,6 +46,10 @@ const Canvas = () => {
       context.strokeStyle = "black";
       context.lineWidth = 5;
       contextRef.current = context;
+
+      window.addEventListener("keydown", clearCanvas);
+
+      return () => window.removeEventListener("keydown",clearCanvas);
         
     }, []);
 
@@ -47,7 +57,8 @@ const Canvas = () => {
     <canvas ref={canvasRef} 
     onMouseDown={startDrawing}
     onMouseMove={drawing}
-    onMouseUp={stopDrawing}></canvas>
+    onMouseUp={stopDrawing}
+    onKeyDown={clearCanvas}></canvas>
   )
 }
 
