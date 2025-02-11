@@ -1,16 +1,25 @@
 const express = require('express');
 const { createServer } = require('node:http');
-const { join } = require('path'); 
+const cors = require('cors'); 
+const { Server } = require('socket.io');
+
 const app = express();
 const server = createServer(app);
-const port = 3000;
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:5173/',
+        methods: ['GET', 'POST']
+    }
+});
+
+app.use(cors());
+app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '../frontend/index.html');
+    res.send('Backend server is running');
 });
 
-server.listen(port, () => {
-    console.log(`server running at http://localhost:${port}`);
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-app.use('/frontend', express.static('frontend'));
