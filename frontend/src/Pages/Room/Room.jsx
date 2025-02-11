@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import Canvas from "./Canvas";
 
 const Room = () => {
-    let { room } = useParams();
+    let { roomID } = useParams();
   return (
     <>
-    <h2>Room: {room} </h2>
+    <h2>Room: {roomID} </h2>
     <div className="drawing-area">
       <Canvas />
     </div>

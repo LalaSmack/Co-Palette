@@ -1,10 +1,29 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
+import { useParams } from "react-router-dom";
+
+const socket = io("http://localhost:5000");
 
 const Canvas = () => {
+    const { roomID } = useParams();
     const canvasRef = useRef(null);
     const contextRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
+
+    useEffect(() => {
+      socket.emit("join_room", roomID);
+      console.log("joined room", roomID);
+      
+      socket.on("drawing", ({ offsetX, offsetY }) => {
+        contextRef.current.lineTo(offsetX, offsetY);
+        contextRef.current.stroke();
+      }, [roomID]);
+
+      socket.on("clearCanvas", () => {
+        contextRef.current.clearRect(0, 0, window.innerHeight * 1, window.innerHeight * 0.75);
+      });
+    });
 
     const startDrawing = ({ nativeEvent }) => {
         setIsDrawing(true);
@@ -22,6 +41,7 @@ const Canvas = () => {
       if (event.key === "Delete") {
         console.log("clearing canvas");
         contextRef.current.clearRect(0, 0, window.innerHeight * 1, window.innerHeight * 0.75);
+        socket.emit("clearCanvas", roomID);
       }
     };
     const drawing = ({ nativeEvent }) => {
@@ -31,6 +51,7 @@ const Canvas = () => {
       const { offsetX, offsetY } = nativeEvent;
       contextRef.current.lineTo(offsetX, offsetY);
       contextRef.current.stroke();
+      socket.emit("drawing", { roomID, offsetX, offsetY });
     };
 
     useEffect(() => {

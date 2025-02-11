@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const RoomButton = () => {
-    const [room, setRoom] = useState("");
+    const [roomID, setRoom] = useState("");
     const navigate = useNavigate();
 
     const handleRoomChange = () => {
-        if (room) navigate(`/room/${room}`);
+        if (roomID) navigate(`/room/${roomID}`);
     };
     
     return (
@@ -14,7 +14,7 @@ const RoomButton = () => {
         <input
             type="text"
             placeholder="Enter Room Name"
-            value={room}
+            value={roomID}
             onChange={(e) => setRoom(e.target.value)}
         />
         <button onClick={handleRoomChange}>Join/Create Room</button>
